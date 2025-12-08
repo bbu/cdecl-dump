@@ -25,7 +25,7 @@ fi
 CC=clang
 CFLAGS="-std=gnu23 -pedantic -Wall -Wextra "
 
-if [[ "$CC" = "clang" ]]; then
+if [ "$CC" = "clang" ]; then
     CFLAGS+="-Wno-gnu-statement-expression-from-macro-expansion "
     CFLAGS+="-Wno-gnu-conditional-omitted-operand "
     CFLAGS+="-Wno-gnu-designator "

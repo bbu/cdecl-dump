@@ -52,7 +52,7 @@ enum {
     /* Type specifiers: char, int, float, double, signed, unsigned, short, long */
     TK_TCHR, TK_TINT, TK_TFLT, TK_TDBL, TK_TSGN, TK_TUNS, TK_TSHR, TK_TLON,
 
-    /* Star, left/right paren, left/right bracket */
+    /* Star, left/right paren, left/right bracket, comma */
     TK_STAR, TK_LPAR, TK_RPAR, TK_LBRA, TK_RBRA, TK_COMA,
 
     /* Count of all tokens */
@@ -117,8 +117,8 @@ static sts_t tk_wspc(const char c, uint8_t *const s)
         return is_wspace(c) ? STS_ACCEPT : REJECT;
     }
 
-    __builtin_unreachable();
     assert(false);
+    __builtin_unreachable();
 }
 
 static sts_t tk_name(const char c, uint8_t *const s)
@@ -136,8 +136,8 @@ static sts_t tk_name(const char c, uint8_t *const s)
         return is_alnum(c) || c == '_' ? STS_ACCEPT : REJECT;
     }
 
-    __builtin_unreachable();
     assert(false);
+    __builtin_unreachable();
 }
 
 static sts_t tk_nmbr(const char c, uint8_t *const s)
@@ -155,8 +155,8 @@ static sts_t tk_nmbr(const char c, uint8_t *const s)
         return is_digit(c) ? STS_ACCEPT : REJECT;
     }
 
-    __builtin_unreachable();
     assert(false);
+    __builtin_unreachable();
 }
 
 #include "tk-defines.inc"
@@ -636,9 +636,9 @@ static void destroy_stack(void)
     deallocate_stack();
 }
 
-static inline int term_eq_node(const struct term *const term, const struct node *const node)
+static inline bool term_eq_node(const struct term *const term, const struct node *const node)
 {
-    const int node_is_leaf = node->nchildren == 0;
+    const bool node_is_leaf = node->nchildren == 0;
 
     if (term->is_tk == node_is_leaf) {
         if (node_is_leaf) {
@@ -648,7 +648,7 @@ static inline int term_eq_node(const struct term *const term, const struct node 
         }
     }
 
-    return 0;
+    return false;
 }
 
 static size_t match_rule(const struct rule *const rule, size_t *const at)
@@ -1058,13 +1058,13 @@ static void print_squl_sorted(const struct node *const squl, const bool want_tra
 {
     bool print_started = false;
 
-    #define PUT_SPACE ({ \
+    #define PUT_SPACE { \
         if (print_started) { \
             putchar(' '); \
         } \
         \
         print_started = true; \
-    })
+    }
 
     for (int round = 1; round <= 10; ++round) {
         for (size_t i = 0; i < squl->nchildren; ++i) {
